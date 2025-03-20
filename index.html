@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Sign Up</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Animated gradient background */
+    body {
+      background: linear-gradient(-30deg, rgb(199, 137, 147), #76032f, rgb(6, 6, 101), rgb(244, 244, 237));
+      background-size: 400% 400%;
+      animation: gradientBG 3s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 80%; }
+      50% { background-position: 100% 20%; }
+      100% { background-position: 0% 80%; }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center h-screen">
+  <div class="w-full max-w-md">
+    <!-- Login Form -->
+    <div id="loginForm" class="bg-white p-8 rounded shadow-md">
+      <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+      <form id="loginFormElement">
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter your email" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter your password" required />
+        </div>
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Login</button>
+      </form>
+      <p class="mt-4 text-center text-gray-600">
+        Don't have an account?
+        <a href="#" id="showSignUp" class="text-blue-500 hover:underline">Sign Up</a>
+      </p>
+    </div>
+
+    <!-- Sign Up Form (initially hidden) -->
+    <div id="signUpForm" class="bg-white p-8 rounded shadow-md hidden">
+      <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+      <form id="signUpFormElement">
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="signUpName">Name</label>
+          <input type="text" id="signUpName" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter your name" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="signUpEmail">Email</label>
+          <input type="email" id="signUpEmail" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter your email" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="signUpPassword">Password</label>
+          <input type="password" id="signUpPassword" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter your password" required />
+        </div>
+        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Sign Up</button>
+      </form>
+      <p class="mt-4 text-center text-gray-600">
+        Already have an account?
+        <a href="#" id="showLogin" class="text-blue-500 hover:underline">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Toggle form visibility
+    const loginForm = document.getElementById("loginForm");
+    const signUpForm = document.getElementById("signUpForm");
+    const showSignUpLink = document.getElementById("showSignUp");
+    const showLoginLink = document.getElementById("showLogin");
+
+    showSignUpLink.addEventListener("click", function (e) {
+      e.preventDefault();
+      loginForm.classList.add("hidden");
+      signUpForm.classList.remove("hidden");
+    });
+
+    showLoginLink.addEventListener("click", function (e) {
+      e.preventDefault();
+      signUpForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+    });
+
+    // Login form submission handler with redirection
+    document.getElementById("loginFormElement").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      // Add your login logic here (validation, API call, etc.)
+      console.log("Logging in with", email, password);
+      
+      // Redirect to index.html after successful login
+      window.location.href = "1.html";
+    });
+
+    // Sign Up form submission handler
+    document.getElementById("signUpFormElement").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("signUpName").value;
+      const email = document.getElementById("signUpEmail").value;
+      const password = document.getElementById("signUpPassword").value;
+      // Add your sign-up logic here
+      console.log("Signing up with", name, email, password);
+      alert("Signed up successfully!");
+      // Optionally, redirect to index.html after sign-up:
+      // window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
