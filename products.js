@@ -12,15 +12,16 @@ document.addEventListener("DOMContentLoaded", function () {
         products.forEach((product, index) => {
             let row = `
                 <tr class="border">
-                    <td class="border p-2">${index + 1}</td>
-                    <td class="border p-2">${product.name}</td>
-                    <td class="border p-2">${product.price}</td>
-                    <td class="border p-2">${product.quantity}</td>
-                    <td class="border p-2">${product.price * product.quantity}</td>
-                    <td class="border p-2">
+                    <td class="border p-2" align="center">${index + 1}</td>
+                    <td class="border p-2" align="center">${product.category}</td>
+                    <td class="border p-2" align="center">${product.name}</td>
+                    <td class="border p-2" align="center">${product.price}</td>
+                    <td class="border p-2" align="center">${product.quantity}</td>
+                    <td class="border p-2" align="center">${product.price * product.quantity}</td>
+                    <td class="border p-2" align="center">
                         <button class="bg-yellow-500 text-white px-3 py-1 rounded" onclick="editProduct(${index})">Edit</button>
                     </td>
-                    <td class="border p-2">
+                    <td class="border p-2" align="center">
                         <button class="bg-red-500 text-white px-3 py-1 rounded" onclick="deleteProduct(${index})">Delete</button>
                     </td>
                 </tr>
@@ -32,6 +33,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Make editProduct and deleteProduct accessible globally
     window.editProduct = function (index) {
         // You can replace these prompts with a form if needed
+        let newCategory = prompt("Enter new category:", products[index].category);
+        if (newCategory) {
+            products[index].category = newCategory;
+        }
+
         let newName = prompt("Enter new product name:", products[index].name);
         if (newName) {
             products[index].name = newName;
@@ -56,24 +62,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener for the "Add Product" button using form inputs
     document.getElementById("addProductBtn").addEventListener("click", function () {
+        let category = document.getElementById("categorySelect").value;
         let name = document.getElementById("productNameInput").value;
         let price = document.getElementById("productPriceInput").value;
         let quantity = document.getElementById("productQuantityInput").value;
         
-        if (name && price && quantity) {
+        if (category && name && price && quantity) {
             products.push({
                 id: products.length + 1,
+                category: category,
                 name: name,
                 price: Number(price),
                 quantity: Number(quantity)
             });
             updateTable();
             // Clear the input fields
+            document.getElementById("categorySelect").value = "";
             document.getElementById("productNameInput").value = "";
             document.getElementById("productPriceInput").value = "";
             document.getElementById("productQuantityInput").value = "";
         } else {
-            alert("Please enter product name, price, and quantity.");
+            alert("Please enter category, product name, price, and quantity.");
         }
     });
 

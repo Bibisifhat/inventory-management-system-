@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventory Management</title>
+  
+<script>
+  function toggleDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.classList.toggle('hidden');
+    }
+</script>
+
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-6">
@@ -12,17 +20,29 @@
     
     <!-- Form for Adding a Product -->
     <div class="mb-4">
+      <select id="categorySelect" class="border p-2 mr-2">
+        <option value="" disabled selected>Select Category</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Books">Books</option>
+        <option value="Food">Food</option>
+      </select>
+      
       <input type="text" id="productNameInput" placeholder="Product Name" class="border p-2 mr-2">
       <input type="number" id="productPriceInput" placeholder="Price" class="border p-2 mr-2">
       <input type="number" id="productQuantityInput" placeholder="Quantity" class="border p-2 mr-2">
+      <div class="ml-0 mt-3 text-white px-4 py-2 rounded">
       <button id="addProductBtn" class="bg-blue-500 text-white px-3 py-1 rounded">Add Product</button>
+    </div>
     </div>
     
     <!-- Inventory Table -->
     <table class="w-full border-collapse border border-gray-300">
       <thead>
         <tr class="bg-gray-200">
-          <th class="border p-2">Serial Number</th>
+          <th class="border p-2">Sr.No.</th>
+          <th class="border p-2">Category</th>
           <th class="border p-2">Product Name</th>
           <th class="border p-2">Price</th>
           <th class="border p-2">Quantity</th>
