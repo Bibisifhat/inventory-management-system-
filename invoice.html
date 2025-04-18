@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow-lg">
+    <header class="mb-6">
+      <h1 class="text-3xl font-bold">🧾 Invoice</h1>
+      <div class="text-sm text-gray-600">
+        <p>Invoice #: <span id="invoiceNumber">INV123456</span></p>
+        <p>Date: <span id="invoiceDate">2025-04-18</span></p>
+      </div>
+    </header>
+
+    <!-- Customer Info -->
+    <section class="mb-6">
+      <h2 class="font-semibold text-lg">Customer Info</h2>
+      <p>Name: <span id="customerName">John Doe</span></p>
+      <p>Contact: <span id="customerContact">+91-9876543210</span></p>
+    </section>
+
+    <!-- Product Table -->
+    <section class="mb-6">
+      <h2 class="font-semibold text-lg mb-2">Purchased Items</h2>
+      <table class="w-full border">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border p-2">#</th>
+            <th class="border p-2">Product</th>
+            <th class="border p-2">Price</th>
+            <th class="border p-2">Qty</th>
+            <th class="border p-2">Total</th>
+          </tr>
+        </thead>
+        <tbody id="invoiceTableBody">
+          <!-- Dynamically added rows -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Totals -->
+    <section class="text-right">
+      <p class="text-lg">Subtotal: ₹<span id="subtotal">0.00</span></p>
+      <p class="text-lg">Grand Total: ₹<span id="grandTotal">0.00</span></p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-6 text-center text-gray-500 text-sm">
+      <p>Thank you for your purchase!</p>
+      <p>Contact us at support@example.com</p>
+    </footer>
+  </div>
+
+  <script src="invoice.js"></script>
+</body>
+</html>
