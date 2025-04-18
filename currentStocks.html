@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Current Stocks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="container mx-auto bg-white p-6 rounded shadow-lg">
+    <h1 class="text-2xl font-bold mb-6">📦 Current Stock Overview</h1>
+
+    <!-- Dashboard Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-blue-100 p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Total Products</h2>
+        <p id="totalProducts" class="text-3xl mt-2">0</p>
+      </div>
+      <div class="bg-green-100 p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Total Quantity</h2>
+        <p id="totalQuantity" class="text-3xl mt-2">0</p>
+      </div>
+      <div class="bg-yellow-100 p-4 rounded shadow">
+        <h2 class="text-lg font-semibold">Inventory Value</h2>
+        <p id="inventoryValue" class="text-3xl mt-2">₹0</p>
+      </div>
+    </div>
+
+    <!-- Product Add Form -->
+    <div class="mb-6 flex flex-wrap gap-2">
+      <select id="category" class="border p-2 mr-2">
+        <option value="" disabled selected>Select Category</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Books">Books</option>
+        <option value="Food">Food</option>
+      </select>
+      <input id="name" type="text" placeholder="Name" class="border p-2 rounded w-1/5" />
+      <input id="price" type="number" placeholder="Price" class="border p-2 rounded w-1/5" />
+      <input id="quantity" type="number" placeholder="Quantity" class="border p-2 rounded w-1/5" />
+      <button onclick="addProduct()" class="bg-blue-500 text-white px-4 py-2 rounded">Add</button>
+    </div>
+
+    <!-- Product Table -->
+    <table class="w-full border mb-6">
+      <thead>
+        <tr class="bg-gray-200 text-center">
+          <th class="p-2 border">Category</th>
+          <th class="p-2 border">Name</th>
+          <th class="p-2 border">Price</th>
+          <th class="p-2 border">Quantity</th>
+          <th class="p-2 border">Total</th>
+          <th class="p-2 border">Edit</th>
+          <th class="p-2 border">Remove</th>
+        </tr>
+      </thead>
+      <tbody id="productTableBody"></tbody>
+    </table>
+
+    <!-- Category Breakdown -->
+    <div class="bg-gray-100 p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2">🗂 Category Breakdown</h2>
+      <ul id="categoryBreakdown" class="list-disc ml-5 space-y-1">
+        <!-- List items will be generated here -->
+      </ul>
+    </div>
+  </div>
+
+  <script src="currentStocks.js"></script>
+</body>
+</html>
