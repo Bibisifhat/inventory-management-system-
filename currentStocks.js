@@ -1,3 +1,5 @@
+
+
 let products = [];
 
 function updateDashboard() {
@@ -98,3 +100,6 @@ function clearForm() {
 }
 
 document.addEventListener("DOMContentLoaded", updateDashboard);
+
+
+  
