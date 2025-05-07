@@ -33,7 +33,7 @@
     <div class="p-8">
         <!-- Main Content -->
         <div class="flex-1 p-8 bg-white rounded-lg shadow-md">
-            <h1 class="text-3xl font-semibold mb-6">Create Invoice</h1>
+            <h1 class="text-3xl font-bold text-blue-900 mb-6">Create Invoice</h1>
             
             <!-- Invoice Form -->
             <div class="mb-6">
@@ -41,7 +41,7 @@
                     <!-- Company and Client Details -->
                     <div class="grid grid-cols-2 gap-6">
                         <div class="space-y-4">
-                            <h3 class="text-xl font-bold text-blue-600">Seller Details</h3>
+                            <h3 class="text-xl font-semibold text-blue-600">Seller Details</h3>
                             <input type="text" id="companyName" placeholder="Company Name" class="w-full p-2 border rounded" required>
                             <input type="text" id="address" placeholder="Address" class="w-full p-2 border rounded" required>
                             <input type="email" id="email" placeholder="Email" class="w-full p-2 border rounded" required>
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="space-y-4">
-                            <h3 class="text-xl font-bold text-blue-600">Buyer Details</h3>
+                            <h3 class="text-xl font-semibold text-blue-600">Buyer Details</h3>
                             <input type="text" id="clientName" placeholder="Client Name" class="w-full p-2 border rounded" required>
                             <input type="text" id="clientGstin" placeholder="Client GSTIN" class="w-full p-2 border rounded" required>
                             <input type="date" id="invoiceDate" class="w-full p-2 border rounded" required>
@@ -59,7 +59,7 @@
 
                     <!-- Items Table -->
                     <div class="mb-6">
-                        <h3 class="text-xl font-bold text-blue-600 mb-4">Items Details</h3>
+                        <h3 class="text-xl font-semibold text-blue-600 mb-4">Items Details</h3>
                         <table class="w-full" id="itemsTable">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -76,7 +76,7 @@
                                 <!-- Dynamic rows will be added here -->
                             </tbody>
                         </table>
-                        <button type="button" onclick="addItemRow()" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        <button type="button" onclick="addItemRow()" class="mt-2 bg-pink-300 text-blue-800 font-bold px-4 py-2 rounded hover:bg-pink-400">
                             Add Item
                         </button>
                     </div>
@@ -90,7 +90,7 @@
 
                     <!-- Action Buttons -->
                     <div class="flex gap-4">
-                        <button type="button" onclick="generateInvoice()" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">
+                        <button type="button" onclick="generateInvoice()" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
                             Generate Invoice
                         </button>
                     </div>
