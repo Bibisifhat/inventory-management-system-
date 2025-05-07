@@ -1,138 +1,239 @@
-let invoiceCount = parseInt(localStorage.getItem("invoiceNumber") || "1");
+// invoice.js
+document.addEventListener('DOMContentLoaded', () => {
+  let invoiceCounter = localStorage.getItem('invoiceCounter') || 1000;
 
-function addItem() {
-  const table = document.getElementById("itemRows");
-  const row = table.insertRow();
-
-  row.innerHTML = `
-    <td>${table.rows.length}</td>
-    <td><input type="text" class="input desc" required></td>
-    <td><input type="number" class="input qty" value="0" oninput="updateAmounts()"></td>
-    <td><input type="number" class="input rate" value="0" oninput="updateAmounts()"></td>
-    <td class="amount text-center">0</td>
-    <td><button onclick="removeItem(this)" class="text-red-500 font-bold">X</button></td>
-  `;
-}
-
-function removeItem(btn) {
-  const row = btn.parentElement.parentElement;
-  row.remove();
-  updateAmounts();
-}
-
-function updateAmounts() {
-  let total = 0;
-  document.querySelectorAll("#itemRows tr").forEach((row) => {
-    const qty = parseFloat(row.querySelector(".qty").value || 0);
-    const rate = parseFloat(row.querySelector(".rate").value || 0);
-    const amount = qty * rate;
-    row.querySelector(".amount").innerText = amount.toFixed(2);
-    total += amount;
-  });
-}
-
-function numberToWords(num) {
-  const a = [
-    "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
-    "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
-    "Seventeen", "Eighteen", "Nineteen"
-  ];
-  const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-  if (num === 0) return "Zero";
-
-  const toWords = (n) => {
-    if (n < 20) return a[n];
-    if (n < 100) return b[Math.floor(n / 10)] + (n % 10 ? " " + a[n % 10] : "");
-    if (n < 1000)
-      return a[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " and " + toWords(n % 100) : "");
-    if (n < 100000)
-      return toWords(Math.floor(n / 1000)) + " Thousand" + (n % 1000 ? " " + toWords(n % 1000) : "");
-    return n;
+  // Add Item Row
+  window.addItemRow = () => {
+      const tbody = document.querySelector('#itemsTable tbody');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+          <td><input type="text" class="item-desc p-2 border rounded w-full" required></td>
+          <td><input type="number" class="item-qty p-2 border rounded w-full" min="1" required></td>
+          <td><input type="number" class="item-price p-2 border rounded w-full" min="0" step="0.01" required></td>
+          <td><input type="number" class="item-cgst p-2 border rounded w-full" value="9" required></td>
+          <td><input type="number" class="item-sgst p-2 border rounded w-full" value="9" required></td>
+          <td class="item-total text-right p-2"></td>
+          <td><button class="remove-item bg-red-500 text-white px-2 py-1 rounded">Remove</button></td>
+      `;
+      tbody.appendChild(row);
   };
 
-  return toWords(num) + " only";
-}
-
-function generateInvoice() {
-  const data = {
-    companyName: document.getElementById("companyName").value,
-    companyAddress: document.getElementById("companyAddress").value,
-    companyEmail: document.getElementById("companyEmail").value,
-    companyContact: document.getElementById("companyContact").value,
-    companyGSTIN: document.getElementById("companyGSTIN").value,
-    to: document.getElementById("to").value,
-    partyGSTIN: document.getElementById("partyGSTIN").value,
-    invoiceDate: document.getElementById("invoiceDate").value,
-    bankName: document.getElementById("bankName").value,
-    accountNumber: document.getElementById("accountNumber").value,
-    ifscCode: document.getElementById("ifscCode").value,
-    cgst: parseFloat(document.getElementById("cgst").value || "0"),
-    sgst: parseFloat(document.getElementById("sgst").value || "0")
+  // Calculate Totals
+  const calculateTotal = () => {
+      let grandTotal = 0;
+      document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+          const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+          const price = parseFloat(row.querySelector('.item-price').value) || 0;
+          const cgst = parseFloat(row.querySelector('.item-cgst').value) || 0;
+          const sgst = parseFloat(row.querySelector('.item-sgst').value) || 0;
+          
+          const taxable = qty * price;
+          const total = taxable + (taxable * (cgst + sgst) / 100);
+          row.querySelector('.item-total').textContent = total.toFixed(2);
+          grandTotal += total;
+      });
+      return grandTotal;
   };
 
-  const items = [];
-  let total = 0;
+  // Updated numberToWords function
+const numberToWords = (num) => {
+  const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+  const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', 'Ten', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
 
-  document.querySelectorAll("#itemRows tr").forEach((row) => {
-    const desc = row.querySelector(".desc").value;
-    const qty = parseFloat(row.querySelector(".qty").value || 0);
-    const rate = parseFloat(row.querySelector(".rate").value || 0);
-    const amount = qty * rate;
-    items.push({ desc, qty, rate, amount });
-    total += amount;
-  });
+  const convertLessThanThousand = (n) => {
+      let result = '';
+      if (n >= 100) {
+          result += units[Math.floor(n / 100)] + ' Hundred ';
+          n %= 100;
+      }
+      if (n >= 20) {
+          result += tens[Math.floor(n / 10)] + ' ';
+          n %= 10;
+      }
+      if (n >= 10) {
+          result += teens[n - 10] + ' ';
+          n = 0;
+      }
+      if (n > 0) {
+          result += units[n] + ' ';
+      }
+      return result.trim();
+  };
 
-  const cgstAmount = total * data.cgst / 100;
-  const sgstAmount = total * data.sgst / 100;
-  const grandTotal = total + cgstAmount + sgstAmount;
-  const amountWords = numberToWords(Math.round(grandTotal));
+  const convert = (n) => {
+      if (n === 0) return 'Zero';
+      let result = '';
+      
+      if (n >= 100000) {
+          result += convertLessThanThousand(Math.floor(n / 100000)) + ' Lakh ';
+          n %= 100000;
+      }
+      if (n >= 1000) {
+          result += convertLessThanThousand(Math.floor(n / 1000)) + ' Thousand ';
+          n %= 1000;
+      }
+      if (n > 0) {
+          result += convertLessThanThousand(n);
+      }
+      return result.trim().replace(/\s+/g, ' ');
+  };
 
-  document.getElementById("invoiceOutput").classList.remove("hidden");
-  document.getElementById("downloadBtn").classList.remove("hidden");
+  const integerPart = Math.floor(num);
+  const decimalPart = Math.round((num - integerPart) * 100);
+  
+  let words = '';
+  if (integerPart > 0) {
+      words += convert(integerPart) + ' Rupees';
+  }
+  if (decimalPart > 0) {
+      if (words !== '') words += ' and ';
+      words += convert(decimalPart) + ' Paise';
+  }
+  return words + ' Only';
+};
 
-  document.getElementById("invoiceOutput").innerHTML = `
-    <div id="invoiceArea">
-      <h2 class="text-3xl font-bold text-red-600 text-center">${data.companyName}</h2>
-      <p class="text-center">${data.companyAddress}</p>
-      <p class="text-center">Email: <a href="mailto:${data.companyEmail}" class="text-blue-500">${data.companyEmail}</a> |
-      Contact: ${data.companyContact}</p>
-      <p class="text-center">GSTIN: ${data.companyGSTIN}</p>
-      <div class="grid grid-cols-2 mt-4 text-sm">
-        <div><strong>TO:</strong> ${data.to}<br><strong>Party GSTIN:</strong> ${data.partyGSTIN}</div>
-        <div class="text-right"><strong>Tax Invoice No.:</strong> ${String(invoiceCount).padStart(3, "0")}<br><strong>Date:</strong> ${data.invoiceDate}</div>
+
+
+// In invoice.js, update the generateInvoice function
+window.generateInvoice = () => {
+  if(!document.getElementById('invoiceForm').checkValidity()) {
+      alert('Please fill all required fields');
+      return;
+  }
+
+  const totalAmount = calculateTotal();
+  const invoiceHTML = `
+      <div class="invoice-template">
+          <h1 class="text-3xl font-bold text-center mb-4">${document.getElementById('companyName').value}</h1>
+          
+          <div class="flex justify-between mb-6">
+              <div>
+                  <h2 class="text-2xl font-bold">TAX INVOICE</h2>
+                  <p class="text-blue-600 font-bold">Invoice #${invoiceCounter}</p>
+              </div>
+              <div>
+                  <p>Date: ${document.getElementById('invoiceDate').value}</p>
+              </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="border p-4 rounded">
+                  <h3 class="font-bold">Seller Details:</h3>
+                  <p>${document.getElementById('address').value}</p>
+                  <p>Email: ${document.getElementById('email').value}</p>
+                  <p>Contact: ${document.getElementById('contact').value}</p>
+                  <p>GSTIN: ${document.getElementById('gstin').value}</p>
+              </div>
+              <div class="border p-4 rounded">
+                  <h3 class="font-bold">Buyer Details:</h3>
+                  <p>${document.getElementById('clientName').value}</p>
+                  <p>GSTIN: ${document.getElementById('clientGstin').value}</p>
+              </div>
+          </div>
+
+          <table class="w-full mb-6">
+              <thead class="bg-gray-50">
+                  <tr>
+                      <th class="p-2">Description</th>
+                      <th class="p-2">Quantity</th>
+                      <th class="p-2">Unit Price</th>
+                      <th class="p-2">CGST%</th>
+                      <th class="p-2">SGST%</th>
+                      <th class="p-2">Amount</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  ${Array.from(document.querySelectorAll('#itemsTable tbody tr')).map(row => `
+                      <tr>
+                          <td class="p-2">${row.querySelector('.item-desc').value}</td>
+                          <td class="p-2">${row.querySelector('.item-qty').value}</td>
+                          <td class="p-2">₹${row.querySelector('.item-price').value}</td>
+                          <td class="p-2">${row.querySelector('.item-cgst').value}%</td>
+                          <td class="p-2">${row.querySelector('.item-sgst').value}%</td>
+                          <td class="p-2">₹${row.querySelector('.item-total').textContent}</td>
+                      </tr>
+                  `).join('')}
+              </tbody>
+          </table>
+
+          <div class="text-right mb-6">
+              <h3 class="text-xl font-bold">Total: ₹${totalAmount.toFixed(2)}</h3>
+          </div>
+
+          <div class="border-t pt-4">
+              <h3 class="font-bold">Bank Details:</h3>
+              <p>Bank: ${document.getElementById('bankName').value}</p>
+              <p>IFSC: ${document.getElementById('ifsc').value}</p>
+              <p>Account: ${document.getElementById('accountNo').value}</p>
+          </div>
+
+          <div class="mt-6 p-4 border-t-2 border-b-2">
+              <p class="font-semibold">Amount in Words: ${numberToWords(totalAmount)}</p>
+          </div>
       </div>
-      <table class="w-full border mt-4 invoice-table">
-        <thead><tr><th>Sr. no.</th><th>Description</th><th>Qty</th><th>Unit Rate</th><th>Taxable</th></tr></thead>
-        <tbody>${items.map((item, i) => `<tr><td>${i + 1}</td><td>${item.desc}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.amount.toFixed(2)}</td></tr>`).join('')}</tbody>
-      </table>
-      <div class="grid grid-cols-2 mt-4">
-        <div><strong>Amount in Words:</strong> Rupees ${amountWords}</div>
-        <div class="text-right">
-          <p><strong>Sub Total:</strong> ₹${total.toFixed(2)}</p>
-          <p><strong>CGST @${data.cgst}%:</strong> ₹${cgstAmount.toFixed(2)}</p>
-          <p><strong>SGST @${data.sgst}%:</strong> ₹${sgstAmount.toFixed(2)}</p>
-          <p class="text-lg font-bold">TOTAL: ₹${grandTotal.toFixed(2)}</p>
-        </div>
-      </div>
-      <div class="mt-4"><strong>Bank Details:</strong><br>
-        Bank Name: ${data.bankName}<br>
-        A/C No: ${data.accountNumber}<br>
-        IFSC: ${data.ifscCode}
-      </div>
-    </div>
   `;
 
-  localStorage.setItem("invoiceNumber", ++invoiceCount);
-}
+  const preview = document.getElementById('invoicePreview');
+  preview.innerHTML = invoiceHTML;
+  preview.classList.remove('hidden');
+  document.getElementById('downloadBtn').classList.remove('hidden');
+  
+  invoiceCounter++;
+  localStorage.setItem('invoiceCounter', invoiceCounter);
+};
 
-function downloadInvoice() {
-  const invoice = document.getElementById("invoiceArea");
+  // PDF Download
+ // Update the downloadPDF function
+window.downloadPDF = async () => {
+  const element = document.querySelector('.invoice-template');
+  
+  // Temporarily remove Tailwind classes that might cause issues
+  element.classList.remove('hidden');
+  
+  // Create a clone to preserve original styling
+  const clone = element.cloneNode(true);
+  clone.style.width = '210mm'; // Standard A4 width
+  clone.style.margin = '0 auto';
+  document.body.appendChild(clone);
+
   const opt = {
-    margin: 0.5,
-    filename: `Invoice-${String(invoiceCount - 1).padStart(3, "0")}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+      margin:       10,
+      filename:     `invoice-${invoiceCounter}.pdf`,
+      image:        { type: 'jpeg', quality: 1 },
+      html2canvas:  { 
+          scale: 2,
+          logging: true,
+          useCORS: true,
+          scrollY: 0,
+          allowTaint: true
+      },
+      jsPDF:        { 
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'landscape'
+      }
   };
-  html2pdf().from(invoice).set(opt).save();
-}
+
+  try {
+      // Add small delay to ensure rendering
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await html2pdf().set(opt).from(clone).save();
+  } catch (error) {
+      console.error('PDF generation failed:', error);
+  } finally {
+      document.body.removeChild(clone);
+  }
+};
+  // Event Listeners
+  document.getElementById('itemsTable').addEventListener('input', calculateTotal);
+  document.querySelector('#itemsTable tbody').addEventListener('click', (e) => {
+      if(e.target.classList.contains('remove-item')) {
+          e.target.closest('tr').remove();
+          calculateTotal();
+      }
+  });
+
+  // Initial row
+  addItemRow();
+});
