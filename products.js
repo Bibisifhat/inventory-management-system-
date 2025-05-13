@@ -4,12 +4,19 @@ document.addEventListener("DOMContentLoaded", function () {
      
     ];
 
+    window.searchProduct = function () {
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = products.filter(product => product.name.toLowerCase().includes(searchTerm));
+        updateTable(filtered);
+    };
+    
+
     // Function to update the table based on the current products array
-    function updateTable() {
+    function updateTable(filteredProducts = products) {
         let tableBody = document.getElementById("productTableBody");
-        tableBody.innerHTML = "";  // Clear previous content
-        
-        products.forEach((product, index) => {
+        tableBody.innerHTML = ""; // Clear previous content
+    
+        filteredProducts.forEach((product, index) => {
             let row = `
                 <tr class="border">
                     <td class="border p-2" align="center">${index + 1}</td>
@@ -29,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tableBody.innerHTML += row;
         });
     }
+    
 
     // Make editProduct and deleteProduct accessible globally
     window.editProduct = function (index) {

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invoice Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8 text-gray-900">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Generate Invoice</h1>
+
+    <form id="invoice-form" class="space-y-6">
+      <di``v>
+        <label for="vendor" class="block mb-1 font-medium">Select Vendor:</label>
+        <select id="vendor" name="vendorId" required class="w-full p-2 border rounded">
+          <option value="">-- Select --</option>
+        </select>
+        <div id="vendor-details" class="mt-2 text-sm text-gray-700"></div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Invoice Items</h3>
+        <table class="w-full border text-left" id="items-table">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 border">Product</th>
+              <th class="p-2 border">Name</th>
+              <th class="p-2 border">Qty</th>
+              <th class="p-2 border">Rate</th>
+              <th class="p-2 border">GST %</th>
+              <th class="p-2 border">Amount</th>
+              <th class="p-2 border">Remove</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <button type="button" onclick="addItemRow()" class="mt-2 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">+ Add Item</button>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Totals</h3>
+        <p>Subtotal: ₹<span id="subtotal">0</span></p>
+        <p>Total GST: ₹<span id="gst-total">0</span></p>
+        <p class="font-bold text-lg">Total: ₹<span id="total">0</span></p>
+      </div>
+
+      <button type="submit" class="px-6 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700">Submit Invoice</button>
+    </form>
+  </div>
+
+  <script src="atharvgit.js"></script>
+</body>
+</html>

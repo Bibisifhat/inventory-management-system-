@@ -22,6 +22,18 @@
       <button onclick="addVendor()" class="mt-4 bg-pink-400 text-blue-800 px-8 py-2 rounded hover:bg-pink-500">Add Vendor</button>
     </div>
 
+<!-- Search Bar -->
+<div class="mb-4 text-center">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Search by name, email, contact, etc."
+    class="p-2 w-1/2 border rounded shadow-sm"
+    oninput="filterVendors()"
+  />
+</div>
+
+
     <!-- Vendor Table -->
     <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
       <table class="min-w-full table-auto">

@@ -1,4 +1,5 @@
 let vendorList = [];
+let filteredVendorList = [];
 let editIndex = -1;
 
 function addVendor() {
@@ -22,15 +23,15 @@ function addVendor() {
     editIndex = -1;
   }
 
-  renderVendors();
   clearInputs();
+  filterVendors(); // Re-filter after add/edit
 }
 
-function renderVendors() {
+function renderVendors(list) {
   const tbody = document.getElementById("vendor-table-body");
   tbody.innerHTML = "";
 
-  vendorList.forEach((vendor, index) => {
+  list.forEach((vendor, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td class="p-2 border" align="center">${vendor.id}</td>
@@ -39,8 +40,8 @@ function renderVendors() {
       <td class="p-2 border" align="center">${vendor.contact}</td>
       <td class="p-2 border" align="center">${vendor.gst}</td>
       <td class="p-2 border space-x-2" align="center">
-        <button onclick="editVendor(${index})" class="bg-yellow-400 text-white px-2 py-1 rounded hover:bg-yellow-500 ">Edit</button>
-        <button onclick="removeVendor(${index})" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Remove</button>
+        <button onclick="editVendor(${vendorList.indexOf(vendor)})" class="bg-yellow-400 text-white px-2 py-1 rounded hover:bg-yellow-500">Edit</button>
+        <button onclick="removeVendor(${vendorList.indexOf(vendor)})" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Remove</button>
       </td>
     `;
     tbody.appendChild(row);
@@ -49,7 +50,7 @@ function renderVendors() {
 
 function removeVendor(index) {
   vendorList.splice(index, 1);
-  renderVendors();
+  filterVendors();
 }
 
 function editVendor(index) {
@@ -69,3 +70,19 @@ function clearInputs() {
   document.getElementById("vendor-contact").value = "";
   document.getElementById("vendor-gst").value = "";
 }
+
+// Search Function
+function filterVendors() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  filteredVendorList = vendorList.filter(v =>
+    v.id.toLowerCase().includes(query) ||
+    v.name.toLowerCase().includes(query) ||
+    v.email.toLowerCase().includes(query) ||
+    v.contact.toLowerCase().includes(query) ||
+    v.gst.toLowerCase().includes(query)
+  );
+  renderVendors(filteredVendorList);
+}
+
+// Initial render
+filterVendors();

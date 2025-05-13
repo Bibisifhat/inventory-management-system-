@@ -30,10 +30,25 @@ function updateCategoryBreakdown() {
   }
 }
 
-function updateProductTable() {
+function filterProducts() {
+  const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(searchTerm) ||
+    p.category.toLowerCase().includes(searchTerm)
+  );
+
+  updateProductTable(filtered);
+}
+
+
+function updateProductTable(filteredList = null) {
   const table = document.getElementById("productTableBody");
   table.innerHTML = "";
-  products.forEach((p, index) => {
+
+  const listToRender = filteredList || products;
+
+  listToRender.forEach((p, index) => {
     const row = `
       <tr class="text-center border">
         <td class="border p-2">${p.category}</td>
@@ -52,6 +67,7 @@ function updateProductTable() {
     table.innerHTML += row;
   });
 }
+
 
 function addProduct() {
   const category = document.getElementById("category").value;

@@ -41,6 +41,18 @@
       <button onclick="addProduct()" class="bg-pink-300 hover:bg-pink-400 text-blue-800 font-bold px-4 py-2 rounded">Add</button>
     </div>
       
+     <!-- Search Bar -->
+<div class="mb-4">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Search by product name or category..."
+    class="w-full p-2 border rounded"
+    oninput="filterProducts()"
+  />
+</div>
+ 
+    
     <!-- Product Table -->
     <table class="w-full border mb-6">
       <thead>
